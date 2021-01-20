@@ -40,6 +40,6 @@ output:
 
 ```bash
 export PARENTID=r-abcd
-aws organizations create-organizational-unit --parent-id PARENTID --name Security
+aws organizations create-organizational-unit --parent-id $PARENTID --name Security
 ```
 
