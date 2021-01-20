@@ -1,20 +1,9 @@
 # Create an OU for Supended Accounts
 
-```bash
-aws organizations create-organizational-unit --parent-id $PARENTID --name Suspended --profile prod-master
-```
+## Create the OU via Control Tower Console
 
-Output:
-
-```bash
-{
-    "OrganizationalUnit": {
-        "Id": "ou-abcd-nestedou",
-        "Arn": "arn:aws:organizations::1234546789:ou/o-abcdef/ou-abcd-nestedou",
-        "Name": "Suspended"
-    }
-}
-```
+If this is done via CLI it will not be registered in Control Tower.
+Get the new OU id from the console.
 
 ## Create and attach a zero permissions SCP
 
@@ -26,5 +15,25 @@ aws organizations create-policy \
 --description "Denies all actions. Used to secure suspended accounts" \
 --name DenyALL \
 --type SERVICE_CONTROL_POLICY \
+--profile prod-master
+```
+
+###
+
+Get the policy ID from the response
+
+```bash
+{
+    "Policy": {
+        "PolicySummary": {
+            "Id": "p-12ab34cd",
+```    
+
+### Attach the DenyALl policy to the Suspended OU
+
+```bash
+aws organizations attach-policy \
+--policy-id  p-12ab34cd \
+--target-id ou-abcd-suspendedou \
 --profile prod-master
 ```
