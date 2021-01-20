@@ -10,7 +10,7 @@ Output:
 {
     "OrganizationalUnit": {
         "Id": "ou-abcd-nestedou",
-        "Arn": "arn:aws:organizations::908804739064:ou/o-8mudmvsna8/ou-abcd-nestedou",
+        "Arn": "arn:aws:organizations::1234546789:ou/o-8mudmvsna8/ou-abcd-nestedou",
         "Name": "Suspended"
     }
 }
