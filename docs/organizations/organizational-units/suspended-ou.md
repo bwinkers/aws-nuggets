@@ -21,9 +21,10 @@ Output:
 ### Create the DenyALL policy
 
 ```bash
-  aws organizations create-policy
---content  file://deny-all-policy.json
---description "Denies all actions. Used to secure suspended accounts"
---name DenyALL
---type SERVICE_CONTROL_POLICY
+aws organizations create-policy \
+--content  file://deny-all-policy.json \
+--description "Denies all actions. Used to secure suspended accounts" \
+--name DenyALL \
+--type SERVICE_CONTROL_POLICY \
+--profile prod-master
 ```
