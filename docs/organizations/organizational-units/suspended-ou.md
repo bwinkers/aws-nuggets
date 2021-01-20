@@ -29,7 +29,7 @@ Get the policy ID from the response
             "Id": "p-12ab34cd",
 ```    
 
-### Attach the DenyALl policy to the Suspended OU
+### Attach the DenyALL policy to the Suspended OU
 
 ```bash
 aws organizations attach-policy \
