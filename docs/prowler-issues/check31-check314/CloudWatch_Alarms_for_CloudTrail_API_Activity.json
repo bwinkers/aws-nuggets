@@ -299,11 +299,11 @@
                 "LogGroupName": {
                     "Ref": "LogGroupName"
                 },
-                "FilterPattern": "{ ($.eventName = ConsoleLogin) && ($.additionalEventData.MFAUsed != \"Yes\" ) }",
+                "FilterPattern": "{  $.eventName = \"ConsoleLogin\" && $.additionalEventData.MFAUsed != \"Yes\" }",
                 "MetricTransformations": [
                     {
                         "MetricNamespace": "CloudTrailMetrics",
-                        "MetricName": "ConsoleSignInWithoutMfa",
+                        "MetricName": "ConsoleSignInWithoutMfaCount",
                         "MetricValue": "1"
                     }
                 ]
@@ -319,7 +319,7 @@
                         "Ref": "AlarmNotificationTopic"
                     }
                 ],
-                "MetricName": "ConsoleSignInWithoutMfa",
+                "MetricName": "ConsoleSignInWithoutMfaCount",
                 "Namespace": "CloudTrailMetrics",
                 "ComparisonOperator": "GreaterThanOrEqualToThreshold",
                 "EvaluationPeriods": "1",
@@ -328,7 +328,76 @@
                 "Threshold": "3"
             }
         },
-
+        "AWSCMKChangesMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": {
+                    "Ref": "LogGroupName"
+                },
+                "FilterPattern": "{ ($.eventSource = kms.amazonaws.com) && (($.eventName = DisableKey) || ($.eventName = ScheduleKeyDeletion)) }",
+                "MetricTransformations": [
+                    {
+                        "MetricNamespace": "CloudTrailMetrics",
+                        "MetricName": "AWSCMKChangesCount",
+                        "MetricValue": "1"
+                    }
+                ]
+            }
+        },
+        "AWSCMKChangesAlarm": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmName": "AWSCMKChanges",
+                "AlarmDescription": "Alarms when a changes were made to CMK keys.",
+                "AlarmActions": [
+                    {
+                        "Ref": "AlarmNotificationTopic"
+                    }
+                ],
+                "MetricName": "AWSCMKChangesCount",
+                "Namespace": "CloudTrailMetrics",
+                "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+                "EvaluationPeriods": "1",
+                "Period": "300",
+                "Statistic": "Sum",
+                "Threshold": "3"
+            }
+        },
+        "AWSConfigChangesMetricFilter": {
+            "Type": "AWS::Logs::MetricFilter",
+            "Properties": {
+                "LogGroupName": {
+                    "Ref": "LogGroupName"
+                },
+                "FilterPattern": "{($.eventSource = config.amazonaws.com) && (($.eventName = StopConfigurationRecorder)||($.eventName = DeleteDeliveryChannel)||($.eventName = PutDeliveryChannel)||($.eventName = PutConfigurationRecorder)) }",
+                "MetricTransformations": [
+                    {
+                        "MetricNamespace": "CloudTrailMetrics",
+                        "MetricName": "AWSConfigChangesCount",
+                        "MetricValue": "1"
+                    }
+                ]
+            }
+        },
+        "AWSConfigChangesAlarm": {
+            "Type": "AWS::CloudWatch::Alarm",
+            "Properties": {
+                "AlarmName": "AWSConfigChanges",
+                "AlarmDescription": "Alarms when a changes AWS Config setting changes were made.",
+                "AlarmActions": [
+                    {
+                        "Ref": "AlarmNotificationTopic"
+                    }
+                ],
+                "MetricName": "AWSConfigChangesCount",
+                "Namespace": "CloudTrailMetrics",
+                "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+                "EvaluationPeriods": "1",
+                "Period": "300",
+                "Statistic": "Sum",
+                "Threshold": "3"
+            }
+        },
         "RootAccountUsageFilter": {
             "Type": "AWS::Logs::MetricFilter",
             "Properties": {
@@ -364,7 +433,6 @@
                 "Threshold": "3"
             }
         },
-
         "S3BucketPolicyActivityFilter": {
             "Type": "AWS::Logs::MetricFilter",
             "Properties": {
@@ -400,7 +468,6 @@
                 "Threshold": "3"
             }
         },
-
         "VpcRouteTableChangesFilter": {
             "Type": "AWS::Logs::MetricFilter",
             "Properties": {
@@ -436,8 +503,6 @@
                 "Threshold": "3"
             }
         },
-        
-
         "AuthorizationFailuresMetricFilter": {
             "Type": "AWS::Logs::MetricFilter",
             "Properties": {
